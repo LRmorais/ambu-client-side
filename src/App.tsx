@@ -1,25 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
+import socketIOClient from 'socket.io-client';
 import './App.css';
+const ENDPOINT = "http://localhost:4001";
 
 function App() {
+  const [response, setResponse] = useState("");
+  const [serial, setSerial] = useState('serial2')
+
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT);
+    socket.on("FromAPI", data => {
+      setResponse(data);
+    });
+    socket.on("FromAPI2", data => {
+      setSerial(data);
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Serial 1</h1>
+      <p>
+      {response}
+      </p>
+      <h1>Serial 2</h1>
+      <p>{serial}</p>
     </div>
+
   );
 }
 
